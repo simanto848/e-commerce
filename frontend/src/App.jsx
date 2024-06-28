@@ -6,7 +6,9 @@ export default function App() {
   return (
     <>
       <Header />
-      <Outlet />
+      <main className="min-h-[calc(100vh-100px)]">
+        <Outlet />
+      </main>
       <Footer />
     </>
   );
