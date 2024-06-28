@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import loginIcon from "../assest/signin.gif";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import summaryApi from "../common";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,13 +12,39 @@ const Login = () => {
     password: "",
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+
+    if (formData.email === "" || formData.password === "") {
+      alert("Please fill all the fields");
+      return;
+    } else {
+      const dataResponse = await fetch(summaryApi.signIn.url, {
+        method: summaryApi.signIn.method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await dataResponse.json();
+
+      if (dataResponse.status === 200) {
+        localStorage.setItem("token", data.token);
+        navigate("/");
+      } else {
+        toast.error(data.message);
+      }
+    }
   };
 
   return (

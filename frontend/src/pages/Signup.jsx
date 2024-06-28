@@ -2,13 +2,15 @@ import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import loginIcon from "../assest/signin.gif";
 import { Link } from "react-router-dom";
+import summaryApi from "../common";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     phone: "",
     email: "",
     password: "",
@@ -19,9 +21,42 @@ const Signup = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+
+    if (formData.password !== formData.confirmPassword) {
+      return toast.error("Password and confirm password do not match");
+    } else {
+      const dataResponse = await fetch(summaryApi.signUp.url, {
+        method: summaryApi.signUp.method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          first_name: formData.first_name,
+          last_name: formData.last_name,
+          phone_number: formData.phone,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await dataResponse.json();
+
+      if (data.message === "Registration successful") {
+        toast.success(data.message);
+        setFormData({
+          first_name: "",
+          last_name: "",
+          phone: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+      } else {
+        toast.error(data.message);
+      }
+    }
   };
 
   return (
@@ -33,14 +68,14 @@ const Signup = () => {
           </div>
           <form className="pt-6" onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="firstName" className="block mb-2">
+              <label htmlFor="first_name" className="block mb-2">
                 First Name
               </label>
               <div className="bg-slate-100 p-2 rounded-md">
                 <input
                   type="text"
-                  name="firstName"
-                  value={formData.firstName}
+                  name="first_name"
+                  value={formData.first_name}
                   onChange={handleChange}
                   placeholder="Enter first name..."
                   className="w-full h-full outline-none bg-transparent"
@@ -49,14 +84,14 @@ const Signup = () => {
               </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="lastName" className="block mb-2">
+              <label htmlFor="last_name" className="block mb-2">
                 Last Name
               </label>
               <div className="bg-slate-100 p-2 rounded-md">
                 <input
                   type="text"
-                  name="lastName"
-                  value={formData.lastName}
+                  name="last_name"
+                  value={formData.last_name}
                   onChange={handleChange}
                   placeholder="Enter last name..."
                   className="w-full h-full outline-none bg-transparent"
