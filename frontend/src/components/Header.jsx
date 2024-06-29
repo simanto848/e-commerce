@@ -23,6 +23,7 @@ const Header = () => {
     if (dataResponse.status === 200) {
       fetchUserDetails();
       navigate("/login");
+      toast.success(data.message);
     } else {
       toast.error(data.message);
     }
