@@ -70,13 +70,28 @@ exports.login = async (req, res) => {
       });
     }
 
-    const token = await generateToken(user.id);
+    const token = await generateToken(user);
+    const tokenOption = {
+      httpOnly: true,
+      secure: true,
+    };
 
-    return res.status(200).json({
-      token,
-    });
+    return res.cookie("token", token, tokenOption).json({ token });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+};
+
+exports.logout = async (req, res) => {
+  try {
+    res.clearCookie("token");
+    return res.status(200).json({
+      message: "Logout successful",
+    });
+  } catch (error) {
     return res.status(500).json({
       message: "Internal Server Error",
     });

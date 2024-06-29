@@ -2,9 +2,32 @@ import Logo from "./Logo";
 import { GrSearch } from "react-icons/gr";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import summaryApi from "../common";
+import { useContext } from "react";
+import Context from "../context";
 
 const Header = () => {
+  const { user, fetchUserDetails } = useContext(Context);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const dataResponse = await fetch(summaryApi.logout_user.url, {
+      method: summaryApi.logout_user.method,
+      credentials: "include",
+    });
+
+    const data = await dataResponse.json();
+
+    if (dataResponse.status === 200) {
+      fetchUserDetails();
+      navigate("/login");
+    } else {
+      toast.error(data.message);
+    }
+  };
+
   return (
     <header className="h-10 shadow-md bg-white">
       <div className="h-full container mx-auto flex items-center px-4 justify-between">
@@ -40,12 +63,21 @@ const Header = () => {
           </div>
 
           <div>
-            <Link
-              to={"/login"}
-              className="px-3 py-1 bg-red-600 rounded-full text-white hover:bg-red-700"
-            >
-              Login
-            </Link>
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="px-3 py-1 bg-red-600 rounded-full text-white hover:bg-red-700"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                to={"/login"}
+                className="px-3 py-1 bg-red-600 rounded-full text-white hover:bg-red-700"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       </div>

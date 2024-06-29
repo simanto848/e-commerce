@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import loginIcon from "../assest/signin.gif";
 import { Link, useNavigate } from "react-router-dom";
 import summaryApi from "../common";
 import { toast } from "react-toastify";
+import Context from "../context";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,6 +14,7 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
+  const { fetchUserDetails } = useContext(Context);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,6 +29,7 @@ const Login = () => {
     } else {
       const dataResponse = await fetch(summaryApi.signIn.url, {
         method: summaryApi.signIn.method,
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -41,6 +44,7 @@ const Login = () => {
       if (dataResponse.status === 200) {
         localStorage.setItem("token", data.token);
         navigate("/");
+        fetchUserDetails();
       } else {
         toast.error(data.message);
       }

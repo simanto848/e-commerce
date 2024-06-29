@@ -24,8 +24,13 @@ const comparePassword = async (password, hash) => {
   return await bcrypt.compare(password, hash);
 };
 
-const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "1h" });
+const generateToken = (data) => {
+  const payload = {
+    id: data.id,
+    email: data.email,
+    user_type: data.user_type,
+  };
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
 };
 
 const registerUser = async (data) => {
