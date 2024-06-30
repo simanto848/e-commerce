@@ -1,3 +1,4 @@
+import { useState, useContext } from "react";
 import Logo from "./Logo";
 import { GrSearch } from "react-icons/gr";
 import { FaRegCircleUser } from "react-icons/fa6";
@@ -5,12 +6,12 @@ import { FaShoppingCart } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import summaryApi from "../common";
-import { useContext } from "react";
 import Context from "../context";
 
 const Header = () => {
   const { user, fetchUserDetails } = useContext(Context);
   const navigate = useNavigate();
+  const [isDropdownVisible, setDropdownVisible] = useState(false);
 
   const handleLogout = async () => {
     const dataResponse = await fetch(summaryApi.logout_user.url, {
@@ -27,6 +28,10 @@ const Header = () => {
     } else {
       toast.error(data.message);
     }
+  };
+
+  const toggleDropdown = () => {
+    setDropdownVisible(!isDropdownVisible);
   };
 
   return (
@@ -50,8 +55,22 @@ const Header = () => {
         </div>
 
         <div className="flex items-center gap-7">
-          <div className="text-3xl cursor-pointer">
-            <FaRegCircleUser />
+          <div className="relative flex justify-center">
+            <div className="text-3xl cursor-pointer" onClick={toggleDropdown}>
+              <FaRegCircleUser />
+            </div>
+            {isDropdownVisible && (
+              <div className="absolute bg-white bottom-0 top-11 h-fit p-2 shadow-lg rounded">
+                <nav>
+                  <Link
+                    to="/admin-panel"
+                    className="whitespace-nowrap hover:bg-slate-200 p-2 hover:underline"
+                  >
+                    Admin Panel
+                  </Link>
+                </nav>
+              </div>
+            )}
           </div>
 
           <div className="text-2xl cursor-pointer relative">
