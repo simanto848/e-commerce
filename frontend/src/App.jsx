@@ -17,7 +17,7 @@ export default function App() {
     });
 
     const dataApi = await dataResponse.json();
-    setUser(dataApi.userId);
+    setUser(dataApi.user);
   };
 
   useEffect(() => {

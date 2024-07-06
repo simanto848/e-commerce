@@ -6,13 +6,14 @@ const {
   updateCategory,
   deleteCategory,
 } = require("../app/controllers/categoryController");
+const authToken = require("../app/middleware/authToken");
 
 const router = express.Router();
 
-router.post("/", createCategory);
-router.get("/", getAllCategories);
+router.post("/", authToken, createCategory);
+router.get("/all", getAllCategories);
 router.get("/:categoryId", getCategoryById);
-router.put("/update/:categoryId", updateCategory);
-router.delete("/remove/:categoryId", deleteCategory);
+router.put("/update/:categoryId", authToken, updateCategory);
+router.delete("/remove/:categoryId", authToken, deleteCategory);
 
 module.exports = router;

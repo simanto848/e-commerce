@@ -15,7 +15,7 @@ async function authToken(req, res, next) {
           message: "Invalid token",
         });
       }
-      req.userId = decoded?.id;
+      req.user = decoded;
       next();
     });
   } catch (error) {

@@ -5,18 +5,19 @@ import Context from "../context";
 
 const AdminPannel = () => {
   const { user } = useContext(Context);
-
   return (
     <div className="min-h-[calc(100vh-120px)] flex bg-gray-100">
       <aside className="bg-white min-h-full w-64 p-4 shadow-md">
         <div className="h-32 flex flex-col justify-center items-center mb-6">
           <div className="text-5xl cursor-pointer relative flex justify-center mb-4">
-            {user ? <FaRegCircleUser /> : <FaRegCircleUser />}
+            <FaRegCircleUser />
           </div>
           <p className="capitalize text-lg font-semibold">
-            {user?.name || "User"}
+            {user ? user.user_type : "Customer"}
           </p>
-          <p className="text-sm text-gray-500">{user?.role || "Role"}</p>
+          <p className="text-sm text-gray-500">
+            {user ? user.email : "example@email.com"}
+          </p>
         </div>
 
         <nav className="grid gap-2">

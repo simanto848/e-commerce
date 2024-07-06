@@ -9,14 +9,18 @@ const summaryApi = {
     url: `${backendDomain}/api/auth/login`,
     method: "POST",
   },
-  current_user: {
-    url: `${backendDomain}/api/user/details`,
-    method: "GET",
-  },
   logout_user: {
     url: `${backendDomain}/api/auth/logout`,
     method: "GET",
   },
+  current_user: {
+    url: `${backendDomain}/api/user/details`,
+    method: "GET",
+  },
+  getUserDetails: (userId) => ({
+    url: `${backendDomain}/api/user/details/${userId}`,
+    method: "GET",
+  }),
   allUsers: {
     url: `${backendDomain}/api/user/all`,
     method: "GET",
@@ -30,21 +34,25 @@ const summaryApi = {
     method: "PUT",
   },
   addCategory: {
-    url: `${backendDomain}/api/category/add`,
+    url: `${backendDomain}/api/category/`,
     method: "POST",
   },
   allCategories: {
     url: `${backendDomain}/api/category/all`,
     method: "GET",
   },
-  deleteCategory: {
-    url: `${backendDomain}/api/category/delete`,
+  getCategoryById: (categoryId) => ({
+    url: `${backendDomain}/api/category/${categoryId}`,
+    method: "GET",
+  }),
+  deleteCategory: (categoryId) => ({
+    url: `${backendDomain}/api/category/remove/${categoryId}`,
     method: "DELETE",
-  },
-  updateCategory: {
-    url: `${backendDomain}/api/category/update`,
+  }),
+  updateCategory: (categoryId) => ({
+    url: `${backendDomain}/api/category/update/${categoryId}`,
     method: "PUT",
-  },
+  }),
   addAddress: {
     url: `${backendDomain}/api/address/add`,
     method: "POST",

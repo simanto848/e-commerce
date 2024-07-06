@@ -7,10 +7,10 @@ const {
 } = require("../services/authService");
 
 exports.register = async (req, res) => {
-  const { first_name, last_name, email, password, phone_number } = req.body;
+  const { full_name, email, password, phone_number } = req.body;
 
   try {
-    if (!first_name || !last_name || !email || !password || !phone_number) {
+    if (!full_name || !email || !password || !phone_number) {
       return res.status(400).json({
         message: "All fields are required",
       });
@@ -25,8 +25,7 @@ exports.register = async (req, res) => {
     } else {
       const hashedPassword = await hashPassword(password);
       const data = {
-        first_name,
-        last_name,
+        full_name,
         email,
         password: hashedPassword,
         phone_number,
@@ -70,7 +69,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    const token = await generateToken(user);
+    const token = generateToken(user);
     const tokenOption = {
       httpOnly: true,
       secure: true,

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import loginIcon from "../assest/signin.gif";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import summaryApi from "../common";
 import { toast } from "react-toastify";
 
@@ -9,13 +9,13 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
+    full_name: "",
     phone: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,8 +33,7 @@ const Signup = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          first_name: formData.first_name,
-          last_name: formData.last_name,
+          full_name: formData.full_name,
           phone_number: formData.phone,
           email: formData.email,
           password: formData.password,
@@ -42,17 +41,16 @@ const Signup = () => {
       });
 
       const data = await dataResponse.json();
-
-      if (data.message === "Registration successful") {
+      if (dataResponse.ok && dataResponse.status === 201) {
         toast.success(data.message);
         setFormData({
-          first_name: "",
-          last_name: "",
+          full_name: "",
           phone: "",
           email: "",
           password: "",
           confirmPassword: "",
         });
+        navigate("/login");
       } else {
         toast.error(data.message);
       }
@@ -68,32 +66,16 @@ const Signup = () => {
           </div>
           <form className="pt-6" onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="first_name" className="block mb-2">
-                First Name
+              <label htmlFor="full_name" className="block mb-2">
+                Full Name
               </label>
               <div className="bg-slate-100 p-2 rounded-md">
                 <input
                   type="text"
-                  name="first_name"
-                  value={formData.first_name}
+                  name="full_name"
+                  value={formData.full_name}
                   onChange={handleChange}
                   placeholder="Enter first name..."
-                  className="w-full h-full outline-none bg-transparent"
-                  required
-                />
-              </div>
-            </div>
-            <div className="mb-4">
-              <label htmlFor="last_name" className="block mb-2">
-                Last Name
-              </label>
-              <div className="bg-slate-100 p-2 rounded-md">
-                <input
-                  type="text"
-                  name="last_name"
-                  value={formData.last_name}
-                  onChange={handleChange}
-                  placeholder="Enter last name..."
                   className="w-full h-full outline-none bg-transparent"
                   required
                 />
